@@ -452,8 +452,11 @@
             throw new Exception("Value not found");
         }
 
-        private Brush GetItemBrush(int index)
+        private Brush GetItemBrush(int index, DataPoint series)
         {
+            if (series.BrushMemberBrush != null)
+                return series.BrushMemberBrush;
+
             ResourceDictionaryCollection usedPalette = this.DefaultPalette;
             if (this.Palette != null)
             {
@@ -675,7 +678,8 @@
                                         datapoint.SeriesCaption = allSeries.SeriesTitle;
                                         datapoint.ValueMember = allSeries.ValueMember;
                                         datapoint.DisplayMember = allSeries.DisplayMember;
-                                        datapoint.ItemBrush = this.Series.Count == 1 ? GetItemBrush(itemIndex) : GetItemBrush(seriesIndex); //if only one series, use different color for each datapoint, if multiple series we use different color for each series
+                                        datapoint.BrushMember = allSeries.BrushMember;
+                                        datapoint.ItemBrush = this.Series.Count == 1 ? GetItemBrush(itemIndex, datapoint) : GetItemBrush(seriesIndex, datapoint); //if only one series, use different color for each datapoint, if multiple series we use different color for each series
                                         datapoint.PropertyChanged += groupdItem_PropertyChanged;
 
                                         CreateDataPointBindings(datapoint, dataPointGroup);
@@ -729,7 +733,8 @@
                                         datapoint.SeriesCaption = seriesItemCaption;
                                         datapoint.ValueMember = allSeries.ValueMember;
                                         datapoint.DisplayMember = allSeries.DisplayMember;
-                                        datapoint.ItemBrush = GetItemBrush(seriesIndex);
+                                        datapoint.BrushMember = allSeries.BrushMember;
+                                        datapoint.ItemBrush = GetItemBrush(seriesIndex, datapoint);
                                         datapoint.PropertyChanged += groupdItem_PropertyChanged;
 
                                         CreateDataPointBindings(datapoint, dataPointGroup);
@@ -823,7 +828,7 @@
                 int index = 0;
                 foreach (DataPoint dataPoint in dataPointGroup.DataPoints)
                 {
-                    dataPoint.SetValue(DataPoint.ItemBrushProperty, GetItemBrush(index));
+                    dataPoint.SetValue(DataPoint.ItemBrushProperty, GetItemBrush(index, dataPoint));
                     index++;
                 }
             }

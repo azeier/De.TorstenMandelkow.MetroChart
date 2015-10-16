@@ -28,6 +28,11 @@ namespace De.TorstenMandelkow.MetroChart
 
     public class ChartSeries : ItemsControl
     { 
+        public static readonly DependencyProperty BrushMemberProperty =
+            DependencyProperty.Register("BrushMember",
+            typeof(string),
+            typeof(ChartSeries),
+            new PropertyMetadata(null));
         public static readonly DependencyProperty DisplayMemberProperty =
             DependencyProperty.Register("DisplayMember",
             typeof(string),
@@ -82,6 +87,12 @@ namespace De.TorstenMandelkow.MetroChart
             {
                 SetValue(ValueMemberProperty, value);
             }
+        }
+
+        public string BrushMember
+        {
+            get { return (string)GetValue(BrushMemberProperty); }
+            set { SetValue(BrushMemberProperty, value); }
         }
     }
 }

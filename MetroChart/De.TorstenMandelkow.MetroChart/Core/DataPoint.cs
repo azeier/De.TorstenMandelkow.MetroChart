@@ -334,6 +334,18 @@
                 //raiseproperty change on displayname
             }
         }
+        
+        public Brush BrushMemberBrush
+        {
+            get
+            {
+                if (_ReferencedObject == null || string.IsNullOrEmpty(BrushMember))
+                    return null;
+                return GetBrush(_ReferencedObject, BrushMember);
+            }
+        }
+
+        public string BrushMember { get; set; }
 
         public string ValueMember { get; set; }
 
@@ -389,6 +401,26 @@
                     {
                         object v = info.GetValue(item, null);
                         return v.ToString();
+                    }
+                }
+                throw new Exception(string.Format("Property '{0}' not found on item of type '{1}'", propertyName, item.GetType().ToString()));
+            }
+            return null;
+        }
+
+        private Brush GetBrush(object item, string propertyName)
+        {
+            if (item != null)
+            {
+                foreach (PropertyInfo info in item.GetType().GetAllProperties())
+                {
+                    if (info.Name == propertyName)
+                    {
+                        var v = info.GetValue(item, null) as Brush;
+                        if(v != null)
+                        {
+                            return v;
+                        }
                     }
                 }
                 throw new Exception(string.Format("Property '{0}' not found on item of type '{1}'", propertyName, item.GetType().ToString()));
